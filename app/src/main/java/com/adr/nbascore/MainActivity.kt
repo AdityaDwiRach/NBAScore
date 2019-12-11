@@ -1,18 +1,14 @@
 package com.adr.nbascore
 
 import android.os.Bundle
-import android.util.Log
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import com.adr.nbascore.fragment.HomeFragment
 import com.adr.nbascore.fragment.ListTeamFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener{
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,21 +17,31 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         supportFragmentManager.beginTransaction().replace(R.id.fl_container, HomeFragment()).commit()
 
 //        btm_nav.setOnNavigationItemSelectedListener(navigationItemSelected)
-    }
 
-    private val navigationItemSelected = BottomNavigationView.OnNavigationItemSelectedListener{
-        when(it.itemId){
-            R.id.home_menu -> supportFragmentManager.beginTransaction().replace(R.id.fl_container, HomeFragment()).commit()
-//                Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show()
-            R.id.search_menu -> Toast.makeText(this, "Search clicked", Toast.LENGTH_SHORT).show()
-            R.id.favorite_menu -> Toast.makeText(this, "Favorite clicked", Toast.LENGTH_SHORT).show()
-            R.id.team_menu -> supportFragmentManager.beginTransaction().replace(R.id.fl_container, ListTeamFragment()).commit()
-//                Toast.makeText(this, "Team clicked", Toast.LENGTH_SHORT).show()
+        btm_nav.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.home_menu -> supportFragmentManager.beginTransaction().replace(R.id.fl_container, HomeFragment()).commit()
+                R.id.search_menu -> Toast.makeText(this, "Search clicked", Toast.LENGTH_SHORT).show()
+                R.id.favorite_menu -> Toast.makeText(this, "Favorite clicked", Toast.LENGTH_SHORT).show()
+                R.id.team_menu -> supportFragmentManager.beginTransaction().replace(R.id.fl_container, ListTeamFragment()).commit()
+            }
+            true
         }
-        false
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+//    private val navigationItemSelected = BottomNavigationView.OnNavigationItemSelectedListener{
+//        when(it.itemId){
+//            R.id.home_menu -> supportFragmentManager.beginTransaction().replace(R.id.fl_container, HomeFragment()).commit()
+////                Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show()
+//            R.id.search_menu -> Toast.makeText(this, "Search clicked", Toast.LENGTH_SHORT).show()
+//            R.id.favorite_menu -> Toast.makeText(this, "Favorite clicked", Toast.LENGTH_SHORT).show()
+//            R.id.team_menu -> supportFragmentManager.beginTransaction().replace(R.id.fl_container, ListTeamFragment()).commit()
+////                Toast.makeText(this, "Team clicked", Toast.LENGTH_SHORT).show()
+//        }
+//        false
+//    }
+
+//    override fun onNavigationItemSelected(item: MenuItem): Boolean {
 //        var fragment: Fragment? = null
 //        Log.i("Testiiiing", "navigation item clicked")
 //
@@ -44,9 +50,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 //                fragment = ListTeamFragment()
 //            }
 //        }
-        btm_nav.setOnNavigationItemSelectedListener(navigationItemSelected)
-        return false
-    }
+//        btm_nav.setOnNavigationItemSelectedListener(navigationItemSelected)
+//        return true
+//    }
 //
 //    private fun loadFragment(fragment: Fragment?): Boolean {
 //        if (fragment != null) {
