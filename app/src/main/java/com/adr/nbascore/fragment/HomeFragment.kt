@@ -1,6 +1,7 @@
 package com.adr.nbascore.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +13,11 @@ import com.adr.learnjson2.api.APIClient
 import com.adr.nbascore.R
 import com.adr.nbascore.adapter.RVAdapterCurrentMatch
 import com.adr.nbascore.api.APICurrentMatchInterface
+import com.adr.nbascore.api.APITeamInterface
 import com.adr.nbascore.model.current_match.CurrentMatch
 import com.adr.nbascore.model.current_match.CurrentMatchL
+import com.adr.nbascore.model.list_team.Team
+import com.adr.nbascore.model.list_team.TeamL
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,6 +26,8 @@ import retrofit2.Response
 class HomeFragment : Fragment() {
 
     lateinit var rVAdapterCurrentMatch: RVAdapterCurrentMatch
+    var dataListTeamName: ArrayList<String>? = null
+    var dataListTeamLogo: ArrayList<String>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -30,7 +36,38 @@ class HomeFragment : Fragment() {
         recycleView.layoutManager = LinearLayoutManager(context)
 
         val apiServices = APIClient.client.create(APICurrentMatchInterface::class.java)
+        val apiServicesLogo = APIClient.client.create(APITeamInterface::class.java)
+
         val call = apiServices.getDataCurrentMatch()
+        val callLogo = apiServicesLogo.getDataTeam()
+
+        callLogo.enqueue(object : Callback<TeamL> {
+            //            val dataListTeamName = MutableList<String>
+            override fun onFailure(call: Call<TeamL>, t: Throwable) {
+                progress_bar.visibility = View.GONE
+                Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
+            }
+
+            override fun onResponse(call: Call<TeamL>, response: Response<TeamL>) {
+                dataListTeamName = ArrayList()// cari cara pass data (arraylist) ke RVAdapter
+                dataListTeamLogo = ArrayList()
+                val dataListTeam:List<Team> = response.body()?.teams!!
+
+//                dataListTeamLogo.clear()
+//                dataListTeamName.clear()
+                val iterator = dataListTeam.listIterator()
+                for (item in iterator ){
+                    dataListTeamName!!.add(item.strTeam)
+                    dataListTeamLogo!!.add(item.strTeamLogo)
+                }
+                progress_bar.visibility = View.GONE
+
+                for (i in dataListTeamName!!){
+                    Log.i("testiiiiing", i)
+                }
+            }
+
+        })
 
         call.enqueue(object : Callback<CurrentMatchL> {
             override fun onFailure(call: Call<CurrentMatchL>, t: Throwable) {
@@ -40,12 +77,40 @@ class HomeFragment : Fragment() {
 
             override fun onResponse(call: Call<CurrentMatchL>, response: Response<CurrentMatchL>) {
                 val dataList:List<CurrentMatch> = response.body()?.events!!
-                rVAdapterCurrentMatch = RVAdapterCurrentMatch(context!!, dataList)
+                rVAdapterCurrentMatch = RVAdapterCurrentMatch(context!!, dataList, dataListTeamName, dataListTeamLogo)
                 recycleView.adapter = rVAdapterCurrentMatch
                 progress_bar.visibility = View.GONE
             }
 
         })
+
+//        callLogo.enqueue(object : Callback<TeamL> {
+////            val dataListTeamName = MutableList<String>
+//            override fun onFailure(call: Call<TeamL>, t: Throwable) {
+//                progress_bar.visibility = View.GONE
+//                Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
+//            }
+//
+//            override fun onResponse(call: Call<TeamL>, response: Response<TeamL>) {
+//                dataListTeamName = ArrayList()
+//                dataListTeamLogo = ArrayList()
+//                val dataListTeam:List<Team> = response.body()?.teams!!
+//
+////                dataListTeamLogo.clear()
+////                dataListTeamName.clear()
+//                val iterator = dataListTeam.listIterator()
+//                for (item in iterator ){
+//                    dataListTeamName!!.add(item.strTeam)
+//                    dataListTeamLogo!!.add(item.strTeamLogo)
+//                }
+//                progress_bar.visibility = View.GONE
+//
+//                for (i in dataListTeamName!!){
+//                    Log.i("testiiiiing", i)
+//                }
+//            }
+//
+//        })
         return view
 //        super.onCreateView(inflater, container, savedInstanceState)
     }
