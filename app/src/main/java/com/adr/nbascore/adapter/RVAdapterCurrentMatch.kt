@@ -8,12 +8,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.adr.nbascore.R
 import com.adr.nbascore.model.current_match.CurrentMatch
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_current_match.view.*
+import java.lang.reflect.Type
+
 
 class RVAdapterCurrentMatch(
-    var context: Context, var dataList: List<CurrentMatch>, var dataListTeamName: ArrayList<String>?, var dataListTeamLogo: ArrayList<String>?
-): RecyclerView.Adapter<RVAdapterCurrentMatch.ViewHolder>() {
+    var context: Context, var dataList: List<CurrentMatch>): RecyclerView.Adapter<RVAdapterCurrentMatch.ViewHolder>() {
 
 //    var dataListName = HomeFragment()
 
@@ -48,15 +51,24 @@ class RVAdapterCurrentMatch(
         holder.awayTeamScore.text = dataList[position].intAwayScore
         holder.awayTeamName.text = dataList[position].strAwayTeam
 
-        val idHome = dataListTeamName?.indexOf(dataList[position].strHomeTeam)
-        val idAway = dataListTeamName?.indexOf(dataList[position].strAwayTeam)
+        val prefs = context?.getSharedPreferences("NAME_LOGO", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val jsonName = prefs.getString("DATA_LIST_NAME", null)
+        val jsonLogo = prefs.getString("DATA_LIST_LOGO", null)
+        val type: Type = object : TypeToken<ArrayList<String?>?>() {}.type
+
+        val dataListName = gson.fromJson<ArrayList<String>>(jsonName,type)
+        val dataListLogo = gson.fromJson<ArrayList<String>>(jsonLogo, type)
+
+        val idHome = dataListName?.indexOf(dataList[position].strHomeTeam)
+        val idAway = dataListName?.indexOf(dataList[position].strAwayTeam)
 
         val imageHomeTeamLogo = holder.homeTeamLogo
         val imageAwayTeamLogo = holder.awayTeamLogo
 
-        Picasso.get().load(dataListTeamLogo?.get(idHome!!)).fit().into(imageHomeTeamLogo)
-//        Picasso.get().load(dataList[position].strTeamBadge).fit().into(imageTeamLogo)
-        Picasso.get().load(dataListTeamLogo?.get(idAway!!)).fit().into(imageAwayTeamLogo)
+        Picasso.get().load(dataListLogo?.get(idHome!!)).fit().into(imageHomeTeamLogo)
+
+        Picasso.get().load(dataListLogo?.get(idAway!!)).fit().into(imageAwayTeamLogo)
 
         holder.itemView.setOnClickListener {
             Log.i("testiiiiing", "Home : $idHome; Away : $idAway" )
