@@ -56,11 +56,11 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Home"/>
+<!--                    <TextView-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:gravity="center"-->
+<!--                        android:text="Home"/>-->
 
                     <TextView
                         android:id="@+id/home_team_score"
@@ -71,8 +71,10 @@
 
                     <ImageView
                         android:id="@+id/home_team_logo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@android:color/white"
+                        android:layout_gravity="center"
                         />
 
                     <TextView
@@ -99,11 +101,11 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Away"/>
+<!--                    <TextView-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:gravity="center"-->
+<!--                        android:text="Away"/>-->
 
                     <TextView
                         android:id="@+id/away_team_score"
@@ -114,8 +116,10 @@
 
                     <ImageView
                         android:id="@+id/away_team_logo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@android:color/white"
+                        android:layout_gravity="center"
                         />
 
                     <TextView

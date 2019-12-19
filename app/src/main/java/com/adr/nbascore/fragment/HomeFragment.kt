@@ -62,7 +62,7 @@ class HomeFragment : Fragment() {
                 val iterator = dataListTeam.listIterator()
                 for (item in iterator ){
                     dataListTeamName!!.add(item.strTeam)
-                    dataListTeamLogo!!.add(item.strTeamLogo)
+                    dataListTeamLogo!!.add(item.strTeamBadge)
                 }
 
 //                val shared = context?.getSharedPreferences("NAME_LOGO", MODE_PRIVATE)
