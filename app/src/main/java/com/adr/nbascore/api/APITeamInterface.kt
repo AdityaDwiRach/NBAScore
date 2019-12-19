@@ -3,8 +3,12 @@ package com.adr.nbascore.api
 import com.adr.nbascore.model.list_team.TeamL
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface APITeamInterface {
     @GET("search_all_teams.php?l=NBA")
-    fun getDataTeam(): Call<TeamL>
+    fun getDataAllTeam(): Call<TeamL>
+
+    @GET("searchteams.php?t=")
+    fun getDataTeam(@Query("teamName") teamName:String?): Call<TeamL>
 }
