@@ -9,6 +9,6 @@ interface APITeamInterface {
     @GET("search_all_teams.php?l=NBA")
     fun getDataAllTeam(): Call<TeamL>
 
-    @GET("searchteams.php?t=")
-    fun getDataTeam(@Query("teamName") teamName:String?): Call<TeamL>
+    @GET("searchteams.php")
+    fun getDataTeam(@Query("t") t:String?): Call<TeamL>
 }
