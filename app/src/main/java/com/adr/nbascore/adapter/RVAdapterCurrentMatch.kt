@@ -16,9 +16,7 @@ import java.lang.reflect.Type
 
 
 class RVAdapterCurrentMatch(
-    var context: Context, var dataList: List<CurrentMatch>): RecyclerView.Adapter<RVAdapterCurrentMatch.ViewHolder>() {
-
-//    var dataListName = HomeFragment()
+    var context: Context?, var dataList: List<CurrentMatch>): RecyclerView.Adapter<RVAdapterCurrentMatch.ViewHolder>() {
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val matchDate = itemView.match_date
@@ -53,8 +51,8 @@ class RVAdapterCurrentMatch(
 
         val prefs = context?.getSharedPreferences("NAME_LOGO", Context.MODE_PRIVATE)
         val gson = Gson()
-        val jsonName = prefs.getString("DATA_LIST_NAME", null)
-        val jsonLogo = prefs.getString("DATA_LIST_LOGO", null)
+        val jsonName = prefs?.getString("DATA_LIST_NAME", null)
+        val jsonLogo = prefs?.getString("DATA_LIST_LOGO", null)
         val type: Type = object : TypeToken<ArrayList<String?>?>() {}.type
 
         val dataListName = gson.fromJson<ArrayList<String>>(jsonName,type)

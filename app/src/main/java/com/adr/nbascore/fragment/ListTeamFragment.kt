@@ -1,6 +1,5 @@
 package com.adr.nbascore.fragment
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.adr.learnjson2.adapter.RVAdapterListTeam
+import com.adr.nbascore.adapter.RVAdapterListTeam
 import com.adr.learnjson2.api.APIClient
 import com.adr.nbascore.R
 import com.adr.nbascore.api.APITeamInterface
@@ -52,10 +51,10 @@ class ListTeamFragment : Fragment() {
 
     fun getData(){
         swipeToRefresh.isRefreshing = true
-        val apiServices = APIClient.client.create(APITeamInterface::class.java)
-        val call = apiServices.getDataAllTeam()
+        val apiServices = APIClient.client?.create(APITeamInterface::class.java)
+        val call = apiServices?.getDataAllTeam()
 
-        call.enqueue(object : Callback<TeamL> {
+        call?.enqueue(object : Callback<TeamL> {
             override fun onFailure(call: Call<TeamL>, t: Throwable) {
                 swipeToRefresh.isRefreshing = false
                 progress_bar_list_team.visibility = View.GONE
@@ -65,7 +64,7 @@ class ListTeamFragment : Fragment() {
             override fun onResponse(call: Call<TeamL>, response: Response<TeamL>) {
                 swipeToRefresh.isRefreshing = false
                 val dataList:List<Team> = response.body()?.teams!!
-                rVAdapterListTeam = RVAdapterListTeam(context!!, dataList)
+                rVAdapterListTeam = RVAdapterListTeam(activity?.applicationContext, dataList)
                 recycleView.adapter = rVAdapterListTeam
                 progress_bar_list_team.visibility = View.GONE
             }

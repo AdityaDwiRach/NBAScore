@@ -1,6 +1,7 @@
 package com.adr.nbascore.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +10,20 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.adr.learnjson2.api.APIClient
 import com.adr.nbascore.R
+import com.adr.nbascore.adapter.RVAdapterSearch
+import com.adr.nbascore.api.APILastGameInterface
 import com.adr.nbascore.api.APITeamInterface
+import com.adr.nbascore.model.last_game.LastGame
+import com.adr.nbascore.model.last_game.LastGameL
 import com.adr.nbascore.model.list_team.TeamL
+import com.adr.nbascore.model.test.test
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_search_team.*
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,15 +32,18 @@ import retrofit2.Response
 class SearchTeamFragment: Fragment() {
 
     lateinit var searchView: SearchView
-//    var dataListTeamName: ArrayList<String>? = null
-//    var dataListTeam: List<Team>? = null
+    lateinit var rVAdapterSearch: RVAdapterSearch
+    lateinit var recycleViewSearch: RecyclerView
     var searchString: CharSequence = ""
+    var specificTeamId: String? = ""
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_search_team, container, false)
         searchView = view.findViewById(R.id.search_view)
+        recycleViewSearch = view.findViewById(R.id.recycle_view_search)
+        recycleViewSearch.layoutManager = LinearLayoutManager(context)
 //        progress_bar_search.visibility = View.GONE
 
         searchView.setOnQueryTextListener(object : OnQueryTextListener{
@@ -43,10 +55,10 @@ class SearchTeamFragment: Fragment() {
                 progress_bar_search.visibility = View.VISIBLE
                 searchString = search_view.query
                 getSpecificTeam(searchString.toString())
+                getLast5Game()
+//                    "134880")
                 searchView.setQuery("",false)
                 searchView.clearFocus()
-//                Toast.makeText(context, searchString, Toast.LENGTH_LONG).show()
-                // task HERE
                 return false
             }
         })
@@ -54,31 +66,69 @@ class SearchTeamFragment: Fragment() {
     }
 
     fun getSpecificTeam(teamName: String){
-        val apiServices = APIClient.client.create(APITeamInterface::class.java)
-        val call = apiServices.getDataTeam(teamName)
+        val apiServices = APIClient.client?.create(APITeamInterface::class.java)
+        val call = apiServices?.getDataTeam(teamName)
 
-        call.enqueue(object : Callback<TeamL> {
+        call?.enqueue(object : Callback<TeamL> {
             override fun onFailure(call: Call<TeamL>, t: Throwable) {
                 progress_bar_search.visibility = View.GONE
                 Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
             }
 
             override fun onResponse(call: Call<TeamL>, response: Response<TeamL>) {
-//                val imageTeamBadge:
-//                Toast.makeText(context, "Get Data Success", Toast.LENGTH_LONG).show()
                 val dataListTeam = response.body()?.teams
                 val teamBadgeSearch = view?.findViewById<ImageView>(R.id.team_badge_search)
                 val teamLogoSearch = view?.findViewById<ImageView>(R.id.team_logo_search)
 
-                team_name_search.text = dataListTeam!![0].strTeam
-                team_desc_search.text = dataListTeam[0].strDescriptionEN
+                team_name_search.text = dataListTeam?.get(0)?.strTeam
+                team_desc_search.text = dataListTeam?.get(0)?.strDescriptionEN
 
-//                team_badge_search.setImage(teamBadgeSearch)
+                Picasso.get().load(dataListTeam?.get(0)?.strTeamBadge).fit().into(teamBadgeSearch)
+                Picasso.get().load(dataListTeam?.get(0)?.strTeamLogo).fit().into(teamLogoSearch)
 
-                Picasso.get().load(dataListTeam[0].strTeamBadge).fit().into(teamBadgeSearch)//TODO logo dan badge belum bisa tertampil
-                Picasso.get().load(dataListTeam[0].strTeamLogo).fit().into(teamLogoSearch)
+                specificTeamId = dataListTeam?.get(0)?.idTeam
 
                 progress_bar_search.visibility = View.GONE
+            }
+
+        })
+    }
+
+    fun getLast5Game(){
+//        teamId: String){
+        val apiServices = APIClient.client?.create(APILastGameInterface::class.java)
+        val call = apiServices?.getDataLastGame()
+
+        call?.enqueue(object : Callback<LastGameL> {
+            override fun onFailure(call: Call<LastGameL>, t: Throwable) {
+                progress_bar_search.visibility = View.GONE
+                Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
+            }
+
+            override fun onResponse(call: Call<LastGameL>, response: Response<LastGameL>) {
+                val dataListLastGame = response.body()?.lastGames
+
+//                if (dataListLastGame == null){
+//                    Log.i("Testiiing", "null bro")
+//                } else {
+//                    Log.i("Testiiing", "not null")
+//                }
+                val test = dataListLastGame?.get(4)?.strEvent
+                Log.i("Testiiing", test.toString())
+//                Toast.makeText(context, test, Toast.LENGTH_SHORT).show()
+//
+//                rVAdapterSearch = RVAdapterSearch(activity?.applicationContext, dataListLastGame)
+//                recycleViewSearch.adapter = rVAdapterSearch
+//                val teamBadgeSearch = view?.findViewById<ImageView>(R.id.team_badge_search)
+//                val teamLogoSearch = view?.findViewById<ImageView>(R.id.team_logo_search)
+
+//                team_name_search.text = dataListTeam!![0].strTeam
+//                team_desc_search.text = dataListTeam[0].strDescriptionEN
+//
+//                Picasso.get().load(dataListTeam[0].strTeamBadge).fit().into(teamBadgeSearch)
+//                Picasso.get().load(dataListTeam[0].strTeamLogo).fit().into(teamLogoSearch)
+//
+//                progress_bar_search.visibility = View.GONE
             }
 
         })
@@ -148,7 +198,7 @@ class SearchTeamFragment: Fragment() {
 //                return false
 //            }
 //
-//            fun onSuggestionClick(index: Int): Boolean { // TODO: handle suggestion item click
+//            fun onSuggestionClick(index: Int): Boolean {
 //                return true
 //            }
 //        }

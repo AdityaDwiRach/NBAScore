@@ -1,4 +1,4 @@
-package com.adr.learnjson2.adapter
+package com.adr.nbascore.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ import com.adr.nbascore.model.list_team.Team
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_team.view.*
 
-class RVAdapterListTeam(var context: Context, var dataList: List<Team>): RecyclerView.Adapter<RVAdapterListTeam.ViewHolder>() {
+class RVAdapterListTeam(var context: Context?, var dataList: List<Team>): RecyclerView.Adapter<RVAdapterListTeam.ViewHolder>() {
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var teamLogo = itemView.team_logo

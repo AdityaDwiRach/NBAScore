@@ -36,32 +36,38 @@
                         android:id="@+id/team_name_search"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="Team Name"/>
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp" />
 
                     <ImageView
                         android:id="@+id/team_badge_search"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
                         android:layout_margin="10dp"
-                        android:background="@android:color/white"/>
+                        android:background="@android:color/transparent" />
 
                 </LinearLayout>
 
                 <ImageView
                     android:id="@+id/team_logo_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
                     android:layout_margin="10dp"
                     android:layout_gravity="center"
-                    android:background="@android:color/white"/>
+                    android:background="@android:color/transparent"/>
 
                 <TextView
                     android:id="@+id/team_desc_search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="Team Description"/>
+                    android:layout_margin="10dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycle_view_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:scrollbars="none" />
 
             </LinearLayout>
 

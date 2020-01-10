@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -23,19 +24,19 @@ import com.adr.nbascore.model.current_match.CurrentMatchL
 import com.adr.nbascore.model.list_team.Team
 import com.adr.nbascore.model.list_team.TeamL
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash, need to copy the code to another fragment
 
     lateinit var rVAdapterCurrentMatch: RVAdapterCurrentMatch
     var dataListTeamName: ArrayList<String>? = null
     var dataListTeamLogo: ArrayList<String>? = null
     lateinit var recycleView: RecyclerView
     lateinit var swipeToRefresh: SwipeRefreshLayout
+    lateinit var progressBar: ProgressBar
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -43,6 +44,7 @@ class HomeFragment : Fragment() {
         recycleView = view.findViewById(R.id.recycle_view_home)
         recycleView.layoutManager = LinearLayoutManager(context)
 
+        progressBar = view.findViewById(R.id.progress_bar)
         swipeToRefresh = view.findViewById(R.id.swipe_to_refresh_home)
 
         swipeToRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
@@ -62,21 +64,22 @@ class HomeFragment : Fragment() {
 
     fun getMatchData(){
         swipeToRefresh.isRefreshing = true
-        val apiServicesMatch = APIClient.client.create(APICurrentMatchInterface::class.java)
-        val callMatch = apiServicesMatch.getDataCurrentMatch()
-        callMatch.enqueue(object : Callback<CurrentMatchL> {
+        val apiServicesMatch = APIClient.client?.create(APICurrentMatchInterface::class.java)
+        val callMatch = apiServicesMatch?.getDataCurrentMatch()
+
+        callMatch?.enqueue(object : Callback<CurrentMatchL> {
             override fun onFailure(call: Call<CurrentMatchL>, t: Throwable) {
                 swipeToRefresh.isRefreshing = false
-                progress_bar.visibility = View.GONE
+                progressBar.visibility = View.GONE
                 Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
             }
 
             override fun onResponse(call: Call<CurrentMatchL>, response: Response<CurrentMatchL>) {
                 swipeToRefresh.isRefreshing = false
                 val dataList:List<CurrentMatch> = response.body()?.events!!
-                rVAdapterCurrentMatch = RVAdapterCurrentMatch(context!!, dataList)
+                rVAdapterCurrentMatch = RVAdapterCurrentMatch(activity?.applicationContext, dataList)
                 recycleView.adapter = rVAdapterCurrentMatch
-                progress_bar.visibility = View.GONE
+                progressBar.visibility = View.GONE
             }
 
         })
@@ -84,12 +87,12 @@ class HomeFragment : Fragment() {
 
     fun getLogoData(){
         swipeToRefresh.isRefreshing = true
-        val apiServicesLogo = APIClient.client.create(APITeamInterface::class.java)
-        val callLogo = apiServicesLogo.getDataAllTeam()
-        callLogo.enqueue(object : Callback<TeamL> {
+        val apiServicesLogo = APIClient.client?.create(APITeamInterface::class.java)
+        val callLogo = apiServicesLogo?.getDataAllTeam()
+        callLogo?.enqueue(object : Callback<TeamL> {
             override fun onFailure(call: Call<TeamL>, t: Throwable) {
                 swipeToRefresh.isRefreshing = false
-                progress_bar.visibility = View.GONE
+                progressBar.visibility = View.GONE
                 Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
             }
 
@@ -105,7 +108,7 @@ class HomeFragment : Fragment() {
                     dataListTeamLogo!!.add(item.strTeamBadge)
                 }
 
-                val prefs = context?.getSharedPreferences("NAME_LOGO", MODE_PRIVATE)
+                val prefs = context?.getSharedPreferences("NAME_LOGO_HOME", MODE_PRIVATE)
                 val editor = prefs?.edit()
                 val gson = Gson()
                 val jsonName = gson.toJson(dataListTeamName)
@@ -114,11 +117,7 @@ class HomeFragment : Fragment() {
                 editor?.putString("DATA_LIST_LOGO", jsonLogo)
                 editor?.apply()
 
-                progress_bar.visibility = View.GONE
-
-                for (i in dataListTeamName!!){
-                    Log.i("testiiiiing", i)
-                }
+                progressBar.visibility = View.GONE
             }
 
         })

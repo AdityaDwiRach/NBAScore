@@ -9,14 +9,15 @@ class APIClient {
         val BASE_URL = "https://www.thesportsdb.com/api/v1/json/1/"
         var retrofit: Retrofit? = null
 
-        val client:Retrofit get() {
+        val client: Retrofit?
+            get() {
             if (retrofit == null){
                 retrofit = Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
             }
-            return retrofit!!
+            return retrofit
         }
     }
 }
