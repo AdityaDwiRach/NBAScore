@@ -3,6 +3,7 @@ package com.adr.nbascore.fragment
 import android.content.Context.MODE_PRIVATE
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -96,6 +97,7 @@ class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash
             }
 
             override fun onResponse(call: Call<TeamL>, response: Response<TeamL>) {
+                Log.i("Testiiiiiing", "get api response oke")
                 swipeToRefresh.isRefreshing = false
                 dataListTeamName = ArrayList()
                 dataListTeamLogo = ArrayList()
@@ -107,7 +109,7 @@ class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash
                     dataListTeamLogo!!.add(item.strTeamBadge)
                 }
 
-                val prefs = context?.getSharedPreferences("NAME_LOGO_HOME", MODE_PRIVATE)
+                val prefs = context?.getSharedPreferences("NAME_LOGO", MODE_PRIVATE)
                 val editor = prefs?.edit()
                 val gson = Gson()
                 val jsonName = gson.toJson(dataListTeamName)

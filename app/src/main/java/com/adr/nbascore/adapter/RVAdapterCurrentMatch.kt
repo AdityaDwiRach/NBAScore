@@ -67,9 +67,5 @@ class RVAdapterCurrentMatch(
         Picasso.get().load(dataListLogo?.get(idHome!!)).fit().into(imageHomeTeamLogo)
 
         Picasso.get().load(dataListLogo?.get(idAway!!)).fit().into(imageAwayTeamLogo)
-
-        holder.itemView.setOnClickListener {
-            Log.i("testiiiiing", "Home : $idHome; Away : $idAway" )
-        }
     }
 }
