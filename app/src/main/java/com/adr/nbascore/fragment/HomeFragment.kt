@@ -23,7 +23,13 @@ import com.adr.nbascore.model.current_match.CurrentMatch
 import com.adr.nbascore.model.current_match.CurrentMatchL
 import com.adr.nbascore.model.list_team.Team
 import com.adr.nbascore.model.list_team.TeamL
+import com.adr.nbascore.rxjavatest.Task
 import com.google.gson.Gson
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,6 +43,7 @@ class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash
     lateinit var recycleView: RecyclerView
     lateinit var swipeToRefresh: SwipeRefreshLayout
     lateinit var progressBar: ProgressBar
+    private lateinit var disposable: CompositeDisposable
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -45,6 +52,9 @@ class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash
         recycleView.layoutManager = LinearLayoutManager(context)
 
         progressBar = view.findViewById(R.id.progress_bar)
+
+        disposable = CompositeDisposable()
+
         swipeToRefresh = view.findViewById(R.id.swipe_to_refresh_home)
 
         swipeToRefresh.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(context!!, R.color.colorPrimary))
@@ -67,25 +77,59 @@ class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash
         val apiServicesMatch = APIClient.client?.create(APICurrentMatchInterface::class.java)
         val callMatch = apiServicesMatch?.getDataCurrentMatch()
 
-        callMatch?.enqueue(object : Callback<CurrentMatchL> {
-            override fun onFailure(call: Call<CurrentMatchL>, t: Throwable) {
+        callMatch?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe(getMatchDataObserver())
+
+//            enqueue(object : Callback<CurrentMatchL> {
+//            override fun onFailure(call: Call<CurrentMatchL>, t: Throwable) {
+//                swipeToRefresh.isRefreshing = false
+//                progressBar.visibility = View.GONE
+//                Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
+//            }
+//
+//            override fun onResponse(call: Call<CurrentMatchL>, response: Response<CurrentMatchL>) {
+//                swipeToRefresh.isRefreshing = false
+//                val dataList:List<CurrentMatch> = response.body()?.events!!
+//                rVAdapterCurrentMatch = RVAdapterCurrentMatch(activity?.applicationContext, dataList)
+//                recycleView.adapter = rVAdapterCurrentMatch
+//                progressBar.visibility = View.GONE
+//            }
+//
+//        })
+    }
+
+    private fun getMatchDataObserver(): Observer<CurrentMatchL> {
+        return object : Observer<CurrentMatchL> {
+            override fun onComplete() {
+                Log.i("Testiiing", "Get API success")
+            }
+
+            override fun onSubscribe(d: Disposable) {
+                Log.i("Testiiing", "onSubscribe : called")
+                disposable.add(d)
+            }
+
+            override fun onError(e: Throwable) {
+                Log.e("Testiiing", "onError : $e")
                 swipeToRefresh.isRefreshing = false
                 progressBar.visibility = View.GONE
                 Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
             }
 
-            override fun onResponse(call: Call<CurrentMatchL>, response: Response<CurrentMatchL>) {
+            override fun onNext(t: CurrentMatchL) {
+                Log.i("Testiiing", "onNext : ${Thread.currentThread().name}")
                 swipeToRefresh.isRefreshing = false
-                val dataList:List<CurrentMatch> = response.body()?.events!!
+                val dataList:List<CurrentMatch> = t.events
                 rVAdapterCurrentMatch = RVAdapterCurrentMatch(activity?.applicationContext, dataList)
                 recycleView.adapter = rVAdapterCurrentMatch
                 progressBar.visibility = View.GONE
             }
 
-        })
+        }
     }
 
-    fun getLogoData(){
+    fun getLogoData(){//TODO make it inside rxjava
         swipeToRefresh.isRefreshing = true
         val apiServicesLogo = APIClient.client?.create(APITeamInterface::class.java)
         val callLogo = apiServicesLogo?.getDataAllTeam()
@@ -123,5 +167,35 @@ class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash
 
         })
     }
+
+//    private fun getLogoDataObserver(): Observer<CurrentMatchL> {
+//        return object : Observer<CurrentMatchL> {
+//            override fun onComplete() {
+//                Log.i("Testiiing", "Get API success")
+//            }
+//
+//            override fun onSubscribe(d: Disposable) {
+//                Log.i("Testiiing", "onSubscribe : called")
+//                disposable.add(d)
+//            }
+//
+//            override fun onError(e: Throwable) {
+//                Log.e("Testiiing", "onError : $e")
+//                swipeToRefresh.isRefreshing = false
+//                progressBar.visibility = View.GONE
+//                Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
+//            }
+//
+//            override fun onNext(t: CurrentMatchL) {
+//                Log.i("Testiiing", "onNext : ${Thread.currentThread().name}")
+//                swipeToRefresh.isRefreshing = false
+//                val dataList:List<CurrentMatch> = t.events
+//                rVAdapterCurrentMatch = RVAdapterCurrentMatch(activity?.applicationContext, dataList)
+//                recycleView.adapter = rVAdapterCurrentMatch
+//                progressBar.visibility = View.GONE
+//            }
+//
+//        }
+//    }
     
 }

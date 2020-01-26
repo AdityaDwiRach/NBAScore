@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var disposable: CompositeDisposable
+//    private lateinit var disposable: CompositeDisposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,32 +64,32 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getObserver(): Observer<Task>{
-        return object : Observer<Task>{
-            override fun onComplete() {
-                Log.i("Testiiing", "onComplete : called")
-            }
+//    private fun getObserver(): Observer<Task>{
+//        return object : Observer<Task>{
+//            override fun onComplete() {
+//                Log.i("Testiiing", "onComplete : called")
+//            }
+//
+//            override fun onSubscribe(d: Disposable) {
+//                Log.i("Testiiing", "onSubscribe : called")
+//                disposable.add(d)
+//            }
+//
+//            override fun onNext(t: Task) {
+//                Log.i("Testiiing", "onNext : ${Thread.currentThread().name}")
+//                Log.i("Testiiing", "onNext : ${t.description}")
+//
+//            }
+//
+//            override fun onError(e: Throwable) {
+//                Log.e("Testiiing", "onError : $e")
+//            }
+//
+//        }
+//    }
 
-            override fun onSubscribe(d: Disposable) {
-                Log.i("Testiiing", "onSubscribe : called")
-                disposable.add(d)
-            }
-
-            override fun onNext(t: Task) {
-                Log.i("Testiiing", "onNext : ${Thread.currentThread().name}")
-                Log.i("Testiiing", "onNext : ${t.description}")
-
-            }
-
-            override fun onError(e: Throwable) {
-                Log.e("Testiiing", "onError : $e")
-            }
-
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposable.clear()
-    }
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        disposable.clear()
+//    }
 }
