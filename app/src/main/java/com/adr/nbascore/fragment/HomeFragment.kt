@@ -3,7 +3,6 @@ package com.adr.nbascore.fragment
 import android.content.Context.MODE_PRIVATE
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.adr.learnjson2.api.APIClient
+import com.adr.nbascore.api.APIClient
 import com.adr.nbascore.R
 import com.adr.nbascore.adapter.RVAdapterCurrentMatch
 import com.adr.nbascore.api.APICurrentMatchInterface

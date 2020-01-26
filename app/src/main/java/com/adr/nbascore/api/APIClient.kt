@@ -1,4 +1,4 @@
-package com.adr.learnjson2.api
+package com.adr.nbascore.api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

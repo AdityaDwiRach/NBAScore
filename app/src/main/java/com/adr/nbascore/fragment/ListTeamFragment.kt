@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.adr.nbascore.adapter.RVAdapterListTeam
-import com.adr.learnjson2.api.APIClient
+import com.adr.nbascore.api.APIClient
 import com.adr.nbascore.R
 import com.adr.nbascore.api.APITeamInterface
 import com.adr.nbascore.model.list_team.Team

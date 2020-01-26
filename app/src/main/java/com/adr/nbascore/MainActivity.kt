@@ -29,39 +29,39 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        supportFragmentManager.beginTransaction().replace(R.id.fl_container, HomeFragment()).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.fl_container, HomeFragment()).commit()
 
-        val textView = findViewById<TextView>(R.id.tv_test)
-
-        disposable = CompositeDisposable()
-
-        val taskObservable = Observable
-            .fromIterable(DataSource.createTaskList())
-            .subscribeOn(Schedulers.io())
-            .filter {
-                Log.i("Testiiing", "test : ${Thread.currentThread().name}")
-                try {
-                    Thread.sleep(1000)
-                } catch (e: InterruptedException){
-                    e.printStackTrace()
-                }
-                return@filter it.isComplete
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-
-//        val taskObserver = Observer
-        taskObservable.subscribe(getObserver())
-
-
-//        btm_nav.setOnNavigationItemSelectedListener { item ->
-//            when (item.itemId) {
-//                R.id.home_menu -> supportFragmentManager.beginTransaction().replace(R.id.fl_container, HomeFragment()).commit()
-//                R.id.search_menu -> supportFragmentManager.beginTransaction().replace(R.id.fl_container, SearchTeamFragment()).commit()
-//                R.id.favorite_menu -> Toast.makeText(this, "Favorite clicked", Toast.LENGTH_SHORT).show()
-//                R.id.team_menu -> supportFragmentManager.beginTransaction().replace(R.id.fl_container, ListTeamFragment()).commit()
+//        val textView = findViewById<TextView>(R.id.tv_test)
+//
+//        disposable = CompositeDisposable()
+//
+//        val taskObservable = Observable
+//            .fromIterable(DataSource.createTaskList())
+//            .subscribeOn(Schedulers.io())
+//            .filter {
+//                Log.i("Testiiing", "test : ${Thread.currentThread().name}")
+//                try {
+//                    Thread.sleep(1000)
+//                } catch (e: InterruptedException){
+//                    e.printStackTrace()
+//                }
+//                return@filter it.isComplete
 //            }
-//            true
-//        }
+//            .observeOn(AndroidSchedulers.mainThread())
+//
+////        val taskObserver = Observer
+//        taskObservable.subscribe(getObserver())
+
+
+        btm_nav.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.home_menu -> supportFragmentManager.beginTransaction().replace(R.id.fl_container, HomeFragment()).commit()
+                R.id.search_menu -> supportFragmentManager.beginTransaction().replace(R.id.fl_container, SearchTeamFragment()).commit()
+                R.id.favorite_menu -> Toast.makeText(this, "Favorite clicked", Toast.LENGTH_SHORT).show()
+                R.id.team_menu -> supportFragmentManager.beginTransaction().replace(R.id.fl_container, ListTeamFragment()).commit()
+            }
+            true
+        }
     }
 
     private fun getObserver(): Observer<Task>{
