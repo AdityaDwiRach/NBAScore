@@ -133,19 +133,69 @@ class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash
         swipeToRefresh.isRefreshing = true
         val apiServicesLogo = APIClient.client?.create(APITeamInterface::class.java)
         val callLogo = apiServicesLogo?.getDataAllTeam()
-        callLogo?.enqueue(object : Callback<TeamL> {
-            override fun onFailure(call: Call<TeamL>, t: Throwable) {
+
+        callLogo?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe()
+//        .enqueue(object : Callback<TeamL> {
+//            override fun onFailure(call: Call<TeamL>, t: Throwable) {
+//                swipeToRefresh.isRefreshing = false
+//                progressBar.visibility = View.GONE
+//                Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
+//            }
+//
+//            override fun onResponse(call: Call<TeamL>, response: Response<TeamL>) {
+//                Log.i("Testiiiiiing", "get api response oke")
+//                swipeToRefresh.isRefreshing = false
+//                dataListTeamName = ArrayList()
+//                dataListTeamLogo = ArrayList()
+//                val dataListTeam:List<Team> = response.body()?.teams!!
+//                val iterator = dataListTeam.listIterator()
+//
+//                for (item in iterator ){
+//                    dataListTeamName!!.add(item.strTeam)
+//                    dataListTeamLogo!!.add(item.strTeamBadge)
+//                }
+//
+//                val prefs = context?.getSharedPreferences("NAME_LOGO", MODE_PRIVATE)
+//                val editor = prefs?.edit()
+//                val gson = Gson()
+//                val jsonName = gson.toJson(dataListTeamName)
+//                val jsonLogo = gson.toJson(dataListTeamLogo)
+//                editor?.putString("DATA_LIST_NAME", jsonName)
+//                editor?.putString("DATA_LIST_LOGO", jsonLogo)
+//                editor?.apply()
+//
+//                progressBar.visibility = View.GONE
+//            }
+//
+//        })
+    }
+
+    private fun getLogoDataObserver(): Observer<CurrentMatchL> {
+        return object : Observer<CurrentMatchL> {
+            override fun onComplete() {
+                Log.i("Testiiing", "Get API success")
+            }
+
+            override fun onSubscribe(d: Disposable) {
+                Log.i("Testiiing", "onSubscribe : called")
+                disposable.add(d)
+            }
+
+            override fun onError(e: Throwable) {
+                Log.e("Testiiing", "onError : $e")
                 swipeToRefresh.isRefreshing = false
                 progressBar.visibility = View.GONE
                 Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
             }
 
-            override fun onResponse(call: Call<TeamL>, response: Response<TeamL>) {
-                Log.i("Testiiiiiing", "get api response oke")
+            override fun onNext(t: CurrentMatchL) {
+                Log.i("Testiiing", "onNext : ${Thread.currentThread().name}")
                 swipeToRefresh.isRefreshing = false
                 dataListTeamName = ArrayList()
                 dataListTeamLogo = ArrayList()
-                val dataListTeam:List<Team> = response.body()?.teams!!
+                val dataListTeam:List<Team> = t.
                 val iterator = dataListTeam.listIterator()
 
                 for (item in iterator ){
@@ -165,37 +215,7 @@ class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash
                 progressBar.visibility = View.GONE
             }
 
-        })
+        }
     }
-
-//    private fun getLogoDataObserver(): Observer<CurrentMatchL> {
-//        return object : Observer<CurrentMatchL> {
-//            override fun onComplete() {
-//                Log.i("Testiiing", "Get API success")
-//            }
-//
-//            override fun onSubscribe(d: Disposable) {
-//                Log.i("Testiiing", "onSubscribe : called")
-//                disposable.add(d)
-//            }
-//
-//            override fun onError(e: Throwable) {
-//                Log.e("Testiiing", "onError : $e")
-//                swipeToRefresh.isRefreshing = false
-//                progressBar.visibility = View.GONE
-//                Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
-//            }
-//
-//            override fun onNext(t: CurrentMatchL) {
-//                Log.i("Testiiing", "onNext : ${Thread.currentThread().name}")
-//                swipeToRefresh.isRefreshing = false
-//                val dataList:List<CurrentMatch> = t.events
-//                rVAdapterCurrentMatch = RVAdapterCurrentMatch(activity?.applicationContext, dataList)
-//                recycleView.adapter = rVAdapterCurrentMatch
-//                progressBar.visibility = View.GONE
-//            }
-//
-//        }
-//    }
     
 }
