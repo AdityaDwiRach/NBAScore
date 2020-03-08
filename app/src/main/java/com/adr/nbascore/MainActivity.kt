@@ -22,6 +22,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
+    //TODO implement rxjava for getting data from API
+    //TODO imolement dark mode feature
+    //TODO make icon for this app
+
 
 //    private lateinit var disposable: CompositeDisposable
 

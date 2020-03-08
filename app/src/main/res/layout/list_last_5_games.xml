@@ -58,11 +58,18 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/search_team_score"
+                        android:id="@+id/home_team_score_last5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="Score"/>
+
+                    <TextView
+                        android:id="@+id/home_team_name_last5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="HOME Team"/>
 
                 </LinearLayout>
 
@@ -82,7 +89,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/opponent_team_score"
+                        android:id="@+id/away_team_score_last5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -97,11 +104,11 @@
 <!--                        />-->
 
                     <TextView
-                        android:id="@+id/opponent_team_name"
+                        android:id="@+id/away_team_name_last5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Opponent Team"/>
+                        android:text="Away Team"/>
 
                 </LinearLayout>
 

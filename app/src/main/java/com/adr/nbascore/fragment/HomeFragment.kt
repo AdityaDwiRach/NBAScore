@@ -136,7 +136,7 @@ class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash
 
         callLogo?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe()
+            ?.subscribe(getLogoDataObserver())
 //        .enqueue(object : Callback<TeamL> {
 //            override fun onFailure(call: Call<TeamL>, t: Throwable) {
 //                swipeToRefresh.isRefreshing = false
@@ -172,8 +172,8 @@ class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash
 //        })
     }
 
-    private fun getLogoDataObserver(): Observer<CurrentMatchL> {
-        return object : Observer<CurrentMatchL> {
+    private fun getLogoDataObserver(): Observer<TeamL> {
+        return object : Observer<TeamL> {
             override fun onComplete() {
                 Log.i("Testiiing", "Get API success")
             }
@@ -184,18 +184,18 @@ class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash
             }
 
             override fun onError(e: Throwable) {
-                Log.e("Testiiing", "onError : $e")
+                Log.e("Testiiing2", "onError : $e")
                 swipeToRefresh.isRefreshing = false
                 progressBar.visibility = View.GONE
                 Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
             }
 
-            override fun onNext(t: CurrentMatchL) {
+            override fun onNext(t: TeamL) {
                 Log.i("Testiiing", "onNext : ${Thread.currentThread().name}")
                 swipeToRefresh.isRefreshing = false
                 dataListTeamName = ArrayList()
                 dataListTeamLogo = ArrayList()
-                val dataListTeam:List<Team> = t.
+                val dataListTeam:List<Team> = t.teams
                 val iterator = dataListTeam.listIterator()
 
                 for (item in iterator ){

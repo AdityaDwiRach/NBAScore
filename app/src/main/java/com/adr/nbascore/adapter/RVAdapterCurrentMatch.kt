@@ -16,20 +16,20 @@ import java.lang.reflect.Type
 
 
 class RVAdapterCurrentMatch(
-    var context: Context?, var dataList: List<CurrentMatch>): RecyclerView.Adapter<RVAdapterCurrentMatch.ViewHolder>() {
+    private var context: Context?, private var dataList: List<CurrentMatch>): RecyclerView.Adapter<RVAdapterCurrentMatch.ViewHolder>() {
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val matchDate = itemView.match_date
-        val matchTime = itemView.match_time
+        val matchDate = itemView.match_date!!
+        val matchTime = itemView.match_time!!
 
-        val homeTeamName = itemView.home_team_name
-        val awayTeamName = itemView.away_team_name
+        val homeTeamName = itemView.home_team_name!!
+        val awayTeamName = itemView.away_team_name!!
 
-        val homeTeamScore = itemView.home_team_score
-        val awayTeamScore = itemView.away_team_score
+        val homeTeamScore = itemView.home_team_score!!
+        val awayTeamScore = itemView.away_team_score!!
 
-        val homeTeamLogo = itemView.home_team_logo
-        val awayTeamLogo = itemView.away_team_logo
+        val homeTeamLogo = itemView.home_team_logo!!
+        val awayTeamLogo = itemView.away_team_logo!!
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

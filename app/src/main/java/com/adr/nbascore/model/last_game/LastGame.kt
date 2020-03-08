@@ -53,7 +53,7 @@ data class LastGame(
     val strSeason: String,
     val strSport: String,
     val strTVStation: Any,
-    val strThumb: String,
+    val strThumb: Any,
     val strTime: String,
     val strTimeLocal: String,
     val strTweet1: String,

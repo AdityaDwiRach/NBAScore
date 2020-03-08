@@ -4,19 +4,21 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.adr.nbascore.R
 import com.adr.nbascore.model.list_team.Team
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_team.view.*
 
-class RVAdapterListTeam(var context: Context?, var dataList: List<Team>): RecyclerView.Adapter<RVAdapterListTeam.ViewHolder>() {
+class RVAdapterListTeam(private var context: Context?, private var dataList: List<Team>): RecyclerView.Adapter<RVAdapterListTeam.ViewHolder>() {
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        var teamLogo = itemView.team_logo
-        val teamName = itemView.team_name
-        val stadiumName = itemView.stadium_name
-        val stadiumLocation = itemView.stadium_location
+        var teamLogo: ImageView = itemView.team_logo
+        val teamName: TextView = itemView.team_name
+        val stadiumName: TextView = itemView.stadium_name
+        val stadiumLocation: TextView = itemView.stadium_location
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
