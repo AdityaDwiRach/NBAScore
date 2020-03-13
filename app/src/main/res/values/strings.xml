@@ -7,4 +7,39 @@
     <string name="favorite">Favorite</string>
     <string name="account">Account</string>
     <string name="team">Team</string>
+    <string name="win">WIN</string>
+    <string name="lose">LOSE</string>
+
+    <string-array name="nba_team_name">
+        <item>Boston Celtics</item>
+        <item>Brooklyn Nets</item>
+        <item>New York Knicks</item>
+        <item>Philadelphia 76ers</item>
+        <item>Toronto Raptors</item>
+        <item>Chicago Bulls</item>
+        <item>Cleveland Cavaliers</item>
+        <item>Detroit Pistons</item>
+        <item>Indiana Pacers</item>
+        <item>Milwaukee Bucks</item>
+        <item>Atlanta Hawks</item>
+        <item>Charlotte Hornets</item>
+        <item>Miami Heat</item>
+        <item>Orlando Magic</item>
+        <item>Washington Wizards</item>
+        <item>Dallas Mavericks</item>
+        <item>Houston Rockets</item>
+        <item>Memphis Grizzlies</item>
+        <item>New Orleans Pelicans</item>
+        <item>San Antonio Spurs</item>
+        <item>Denver Nuggets</item>
+        <item>Minnesota Timberwolves</item>
+        <item>Oklahoma City Thunder</item>
+        <item>Portland Trail Blazers</item>
+        <item>Utah Jazz</item>
+        <item>Golden State Warriors</item>
+        <item>Los Angeles Clippers</item>
+        <item>Los Angeles Lakers</item>
+        <item>Phoenix Suns</item>
+        <item>Sacramento Kings</item>
+    </string-array>
 </resources>

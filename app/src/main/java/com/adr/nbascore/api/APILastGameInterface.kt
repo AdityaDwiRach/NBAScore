@@ -8,8 +8,5 @@ import retrofit2.http.Query
 interface APILastGameInterface {//TODO implement rxjava
 
     @GET("eventslast.php")
-//            "?id=134880")
-    fun getDataLastGame(@Query("id") id:Int?): Call<LastGameL>
-//        @Query("id") id:String?): Call<LastGameL>
-
+    fun getDataLastGame(@Query("id") id:String?): Call<LastGameL>
 }

@@ -18,6 +18,12 @@
             app:iconifiedByDefault="false"
             app:queryHint="Team Name"/>
 
+        <ListView
+            android:id="@+id/search_suggest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

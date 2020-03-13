@@ -1,11 +1,14 @@
 package com.adr.nbascore.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
@@ -33,28 +36,47 @@ class SearchTeamFragment: Fragment() {
     lateinit var searchView: SearchView
     lateinit var rVAdapterSearch: RVAdapterSearch
     lateinit var recycleViewSearch: RecyclerView
+    lateinit var listView: ListView
     var searchString: CharSequence = ""
     var specificTeamId: String? = ""
+    var teamNameSearch: String? = ""
+    private var teamId: String? = ""
+    private var teamName: Array<String> = arrayOf()
+    private lateinit var listArrayAdapter: ArrayAdapter<String>
 
 
+    @SuppressLint("ResourceType")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_search_team, container, false)
         searchView = view.findViewById(R.id.search_view)
         recycleViewSearch = view.findViewById(R.id.recycle_view_search)
+        listView = view.findViewById(R.id.search_suggest)
+
         recycleViewSearch.layoutManager = LinearLayoutManager(context)
 //        progress_bar_search.visibility = View.GONE
 
+//        val searchAutoComplete: SearchView.SearchAutoComplete
+        teamName = resources.getStringArray(R.array.nba_team_name)
+        listArrayAdapter = ArrayAdapter(context!!, R.id.search_suggest, teamName)
+        listView.adapter = listArrayAdapter
+
         searchView.setOnQueryTextListener(object : OnQueryTextListener{
             override fun onQueryTextChange(newText: String): Boolean {
+                listView.visibility = View.VISIBLE
+                listArrayAdapter.filter.filter(newText)
                 return false
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
-                progress_bar_search.visibility = View.VISIBLE
-                searchString = search_view.query
-                getSpecificTeam(searchString.toString())
-                getLast5Game(134880)
+                if (query.isNotEmpty()){
+                    progress_bar_search.visibility = View.VISIBLE
+                    searchString = search_view.query
+                    getSpecificTeam(searchString.toString())
+                    getLast5Game(teamId.toString())
+                } else {
+                    Toast.makeText(context, "Search field must not be empty", Toast.LENGTH_LONG).show()
+                }
                 searchView.setQuery("",false)
                 searchView.clearFocus()
                 return false
@@ -78,6 +100,8 @@ class SearchTeamFragment: Fragment() {
                 val teamBadgeSearch = view?.findViewById<ImageView>(R.id.team_badge_search)
                 val teamLogoSearch = view?.findViewById<ImageView>(R.id.team_logo_search)
 
+                teamId = dataListTeam?.get(0)?.idTeam
+
                 team_name_search.text = dataListTeam?.get(0)?.strTeam
                 team_desc_search.text = dataListTeam?.get(0)?.strDescriptionEN
 
@@ -86,13 +110,15 @@ class SearchTeamFragment: Fragment() {
 
                 specificTeamId = dataListTeam?.get(0)?.idTeam
 
+
+
                 progress_bar_search.visibility = View.GONE
             }
 
         })
     }
 
-    fun getLast5Game(teamId: Int){
+    fun getLast5Game(teamId: String){
         val apiServices = APIClient.client?.create(APILastGameInterface::class.java)
         val call = apiServices?.getDataLastGame(teamId)
 

@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     //TODO implement rxjava for getting data from API
-    //TODO imolement dark mode feature
+    //TODO implement dark mode feature
     //TODO make icon for this app
 
 
@@ -35,28 +35,6 @@ class MainActivity : AppCompatActivity() {
 
         supportFragmentManager.beginTransaction().replace(R.id.fl_container, HomeFragment()).commit()
 
-//        val textView = findViewById<TextView>(R.id.tv_test)
-//
-//        disposable = CompositeDisposable()
-//
-//        val taskObservable = Observable
-//            .fromIterable(DataSource.createTaskList())
-//            .subscribeOn(Schedulers.io())
-//            .filter {
-//                Log.i("Testiiing", "test : ${Thread.currentThread().name}")
-//                try {
-//                    Thread.sleep(1000)
-//                } catch (e: InterruptedException){
-//                    e.printStackTrace()
-//                }
-//                return@filter it.isComplete
-//            }
-//            .observeOn(AndroidSchedulers.mainThread())
-//
-////        val taskObserver = Observer
-//        taskObservable.subscribe(getObserver())
-
-
         btm_nav.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home_menu -> supportFragmentManager.beginTransaction().replace(R.id.fl_container, HomeFragment()).commit()
@@ -67,33 +45,4 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
-
-//    private fun getObserver(): Observer<Task>{
-//        return object : Observer<Task>{
-//            override fun onComplete() {
-//                Log.i("Testiiing", "onComplete : called")
-//            }
-//
-//            override fun onSubscribe(d: Disposable) {
-//                Log.i("Testiiing", "onSubscribe : called")
-//                disposable.add(d)
-//            }
-//
-//            override fun onNext(t: Task) {
-//                Log.i("Testiiing", "onNext : ${Thread.currentThread().name}")
-//                Log.i("Testiiing", "onNext : ${t.description}")
-//
-//            }
-//
-//            override fun onError(e: Throwable) {
-//                Log.e("Testiiing", "onError : $e")
-//            }
-//
-//        }
-//    }
-
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        disposable.clear()
-//    }
 }
