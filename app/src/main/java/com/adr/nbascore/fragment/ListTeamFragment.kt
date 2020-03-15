@@ -12,9 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.adr.nbascore.R
 import com.adr.nbascore.adapter.RVAdapterListTeam
 import com.adr.nbascore.api.APIClient
-import com.adr.nbascore.R
 import com.adr.nbascore.api.APITeamInterface
 import com.adr.nbascore.model.list_team.Team
 import com.adr.nbascore.model.list_team.TeamL
@@ -24,10 +24,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_list_team.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.util.*
 
 class ListTeamFragment : Fragment() {
 
@@ -59,34 +55,17 @@ class ListTeamFragment : Fragment() {
 //        super.onCreateView(inflater, container, savedInstanceState)
     }
 
-    fun getData(){
+    private fun getData(){
         swipeToRefresh.isRefreshing = true
-        val apiServices = APIClient.client?.create(APITeamInterface::class.java)
-        val call = apiServices?.getDataAllTeam()
+        val apiServices = APIClient().client().create(APITeamInterface::class.java)
+        val call = apiServices.getDataAllTeam()
 
-        call?.subscribeOn(Schedulers.io())
+        call.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe(getDataObserver())
-
-//        enqueue(object : Callback<TeamL> {
-//            override fun onFailure(call: Call<TeamL>, t: Throwable) {
-//                swipeToRefresh.isRefreshing = false
-//                progress_bar_list_team.visibility = View.GONE
-//                Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
-//            }
-//
-//            override fun onResponse(call: Call<TeamL>, response: Response<TeamL>) {
-//                swipeToRefresh.isRefreshing = false
-//                val dataList:List<Team> = response.body()?.teams!!
-//                rVAdapterListTeam = RVAdapterListTeam(activity?.applicationContext, dataList)
-//                recycleView.adapter = rVAdapterListTeam
-//                progress_bar_list_team.visibility = View.GONE
-//            }
-
-//        })
     }
 
-    fun getDataObserver(): Observer<TeamL>{
+    private fun getDataObserver(): Observer<TeamL>{
         return object : Observer<TeamL> {
             override fun onComplete() {
                 Log.i("Testiiing", "Get API success")

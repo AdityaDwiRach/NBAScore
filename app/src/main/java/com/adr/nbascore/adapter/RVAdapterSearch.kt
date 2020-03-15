@@ -1,19 +1,21 @@
 package com.adr.nbascore.adapter
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.Color.GREEN
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.adr.nbascore.R
 import com.adr.nbascore.fragment.SearchTeamFragment
 import com.adr.nbascore.model.last_game.LastGame
 import kotlinx.android.synthetic.main.list_last_5_games.view.*
 
-class RVAdapterSearch(private var context: Context?, private var dataList: List<LastGame>?): RecyclerView.Adapter<RVAdapterSearch.ViewHolder>() {
+class RVAdapterSearch(private var context: Context?, private var dataList: List<LastGame>?, val teamName: String): RecyclerView.Adapter<RVAdapterSearch.ViewHolder>() {
     //TODO straighten the margin data
-    //TODO make function for result match (win or lose)
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val dateSearch: TextView = itemView.match_date_search
@@ -21,7 +23,7 @@ class RVAdapterSearch(private var context: Context?, private var dataList: List<
         val homeScore: TextView = itemView.home_team_score_last5
         val awayScore: TextView = itemView.away_team_score_last5
         val homeTeam: TextView = itemView.home_team_name_last5
-        val awayTeam: TextView = itemView.home_team_name_last5
+        val awayTeam: TextView = itemView.away_team_name_last5
         val resultGameSearch: TextView = itemView.result_game_search
     }
 
@@ -47,35 +49,24 @@ class RVAdapterSearch(private var context: Context?, private var dataList: List<
         holder.awayScore.text = awayScore
         holder.awayTeam.text = awayTeam
 
-        if (isTeamWin(homeTeam.toString(), awayTeam.toString(), homeScore?.toInt()!!, awayScore?.toInt()!!)){
-            holder.resultGameSearch.text = context?.resources?.getString(R.string.win)
+        if (awayScore == null || homeScore == null){
+            holder.resultGameSearch.visibility = View.INVISIBLE
         } else {
-            holder.resultGameSearch.text = context?.resources?.getString(R.string.lose)
+            if (isTeamWin(homeTeam.toString(), awayTeam.toString(), homeScore.toInt(), awayScore.toInt())
+            ) {
+                holder.resultGameSearch.text = context?.resources?.getString(R.string.win)
+                holder.resultGameSearch.setTextColor(context?.resources?.getColor(R.color.dark_green)!!)
+            } else {
+                holder.resultGameSearch.text = context?.resources?.getString(R.string.lose)
+                holder.resultGameSearch.setTextColor(context?.resources?.getColor(R.color.dark_red)!!)
+            }
         }
-
-//        if (SearchTeamFragment().teamNameSearch == holder.homeTeam.text){
-//            val homeScore = holder.homeScore.text.toString().toInt()
-//            val awayScore = holder.awayScore.text.toString().toInt()
-//            if (homeScore > awayScore){
-//                holder.resultGameSearch.text = context?.resources?.getString(R.string.win)
-//            } else {
-//                holder.resultGameSearch.text = context?.resources?.getString(R.string.lose)
-//            }
-//        } else if (SearchTeamFragment().teamNameSearch == holder.awayTeam.text){
-//            val homeScore = holder.homeScore.text.toString().toInt()
-//            val awayScore = holder.awayScore.text.toString().toInt()
-//            if (awayScore > homeScore){
-//                holder.resultGameSearch.text = context?.resources?.getString(R.string.win)
-//            } else {
-//                holder.resultGameSearch.text = context?.resources?.getString(R.string.lose)
-//            }
-//        }
     }
 
     private fun isTeamWin(homeTeam: String, awayTeam: String, homeScore: Int, awayScore: Int): Boolean{
-        if (SearchTeamFragment().teamNameSearch == homeTeam){
+        if (teamName == homeTeam){
             return homeScore > awayScore
-        } else if (SearchTeamFragment().teamNameSearch == awayTeam){
+        } else if (teamName == awayTeam){
             return awayScore > homeScore
         }
         return false

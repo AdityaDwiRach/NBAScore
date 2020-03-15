@@ -8,23 +8,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class APIClient {
 
-    companion object {
-        var retrofit: Retrofit? = null
-
-        val client: Retrofit?
-            get() {
-            if (retrofit == null){
-
-                val gson = GsonBuilder()
-                    .setLenient()
-                    .create()
-                retrofit = Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .build()
-            }
-            return retrofit
-        }
+    fun client(): Retrofit {
+        val gson = GsonBuilder().setLenient().create()
+        return Retrofit.Builder().baseUrl(BASE_URL)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
     }
 }

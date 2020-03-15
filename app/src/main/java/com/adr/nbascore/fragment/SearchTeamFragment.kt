@@ -31,16 +31,14 @@ import retrofit2.Response
 
 class SearchTeamFragment: Fragment() {
     //TODO implement rxjava for getting API data
-    //TODO display data from last game API
 
     lateinit var searchView: SearchView
     lateinit var rVAdapterSearch: RVAdapterSearch
     lateinit var recycleViewSearch: RecyclerView
     lateinit var listView: ListView
     var searchString: CharSequence = ""
-    var specificTeamId: String? = ""
     var teamNameSearch: String? = ""
-    private var teamId: String? = ""
+//    private var teamId: String? = ""
     private var teamName: Array<String> = arrayOf()
     private lateinit var listArrayAdapter: ArrayAdapter<String>
 
@@ -57,14 +55,14 @@ class SearchTeamFragment: Fragment() {
 //        progress_bar_search.visibility = View.GONE
 
 //        val searchAutoComplete: SearchView.SearchAutoComplete
-        teamName = resources.getStringArray(R.array.nba_team_name)
-        listArrayAdapter = ArrayAdapter(context!!, R.id.search_suggest, teamName)
-        listView.adapter = listArrayAdapter
+//        teamName = resources.getStringArray(R.array.nba_team_name)
+//        listArrayAdapter = ArrayAdapter(context!!, R.id.search_suggest, teamName)
+//        listView.adapter = listArrayAdapter
 
         searchView.setOnQueryTextListener(object : OnQueryTextListener{
             override fun onQueryTextChange(newText: String): Boolean {
-                listView.visibility = View.VISIBLE
-                listArrayAdapter.filter.filter(newText)
+//                listView.visibility = View.VISIBLE
+//                listArrayAdapter.filter.filter(newText)
                 return false
             }
 
@@ -73,7 +71,7 @@ class SearchTeamFragment: Fragment() {
                     progress_bar_search.visibility = View.VISIBLE
                     searchString = search_view.query
                     getSpecificTeam(searchString.toString())
-                    getLast5Game(teamId.toString())
+//                    getLast5Game(teamId.toString())
                 } else {
                     Toast.makeText(context, "Search field must not be empty", Toast.LENGTH_LONG).show()
                 }
@@ -85,11 +83,11 @@ class SearchTeamFragment: Fragment() {
         return view
     }
 
-    fun getSpecificTeam(teamName: String){
-        val apiServices = APIClient.client?.create(APITeamInterface::class.java)
-        val call = apiServices?.getDataTeam(teamName)
+    private fun getSpecificTeam(teamName: String){
+        val apiServices = APIClient().client().create(APITeamInterface::class.java)
+        val call = apiServices.getDataTeam(teamName)
 
-        call?.enqueue(object : Callback<TeamL> {
+        call.enqueue(object : Callback<TeamL> {
             override fun onFailure(call: Call<TeamL>, t: Throwable) {
                 progress_bar_search.visibility = View.GONE
                 Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
@@ -99,18 +97,17 @@ class SearchTeamFragment: Fragment() {
                 val dataListTeam = response.body()?.teams
                 val teamBadgeSearch = view?.findViewById<ImageView>(R.id.team_badge_search)
                 val teamLogoSearch = view?.findViewById<ImageView>(R.id.team_logo_search)
+                val teamNameResponse = dataListTeam?.get(0)?.strTeam
 
-                teamId = dataListTeam?.get(0)?.idTeam
-
-                team_name_search.text = dataListTeam?.get(0)?.strTeam
+                team_name_search.text = teamNameResponse
                 team_desc_search.text = dataListTeam?.get(0)?.strDescriptionEN
 
                 Picasso.get().load(dataListTeam?.get(0)?.strTeamBadge).fit().into(teamBadgeSearch)
                 Picasso.get().load(dataListTeam?.get(0)?.strTeamLogo).fit().into(teamLogoSearch)
 
-                specificTeamId = dataListTeam?.get(0)?.idTeam
+                val teamId = dataListTeam?.get(0)?.idTeam
 
-
+                getLast5Game(teamId.toString(), teamNameResponse.toString())
 
                 progress_bar_search.visibility = View.GONE
             }
@@ -118,11 +115,11 @@ class SearchTeamFragment: Fragment() {
         })
     }
 
-    fun getLast5Game(teamId: String){
-        val apiServices = APIClient.client?.create(APILastGameInterface::class.java)
-        val call = apiServices?.getDataLastGame(teamId)
+    private fun getLast5Game(teamId: String, teamName: String){
+        val apiServices = APIClient().client().create(APILastGameInterface::class.java)
+        val call = apiServices.getDataLastGame(teamId)
 
-        call?.enqueue(object : Callback<LastGameL> {
+        call.enqueue(object : Callback<LastGameL> {
             override fun onFailure(call: Call<LastGameL>, t: Throwable) {
                 progress_bar_search.visibility = View.GONE
                 Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
@@ -137,13 +134,10 @@ class SearchTeamFragment: Fragment() {
                     Log.i("Testiiing", "not null")
                 }
                 tv_last5games.visibility = View.VISIBLE
-//                val test = dataListLastGame?.get(4)?.strEvent
-//                Log.i("Testiiing", test.toString())
-//                Toast.makeText(context, test, Toast.LENGTH_SHORT).show()
-//
-                rVAdapterSearch = RVAdapterSearch(activity?.applicationContext, dataListLastGame)
+
+                rVAdapterSearch = RVAdapterSearch(activity?.applicationContext, dataListLastGame, teamName)
                 recycleViewSearch.adapter = rVAdapterSearch
-//
+
                 progress_bar_search.visibility = View.GONE
             }
 

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.adr.nbascore.R
 import com.adr.nbascore.model.current_match.CurrentMatch
@@ -48,6 +49,10 @@ class RVAdapterCurrentMatch(
 
         holder.awayTeamScore.text = dataList[position].intAwayScore
         holder.awayTeamName.text = dataList[position].strAwayTeam
+
+        holder.itemView.setOnClickListener {
+            Toast.makeText(context, "homescore : ${dataList[position].intHomeScore}, awayscore : ${dataList[position].intAwayScore}", Toast.LENGTH_SHORT).show()
+        }
 
         val prefs = context?.getSharedPreferences("NAME_LOGO", Context.MODE_PRIVATE)
         val gson = Gson()

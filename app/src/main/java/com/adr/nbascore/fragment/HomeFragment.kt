@@ -1,5 +1,6 @@
 package com.adr.nbascore.fragment
 
+import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.graphics.Color
 import android.os.Bundle
@@ -14,25 +15,21 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.adr.nbascore.api.APIClient
 import com.adr.nbascore.R
 import com.adr.nbascore.adapter.RVAdapterCurrentMatch
+import com.adr.nbascore.api.APIClient
 import com.adr.nbascore.api.APICurrentMatchInterface
 import com.adr.nbascore.api.APITeamInterface
 import com.adr.nbascore.model.current_match.CurrentMatch
 import com.adr.nbascore.model.current_match.CurrentMatchL
 import com.adr.nbascore.model.list_team.Team
 import com.adr.nbascore.model.list_team.TeamL
-import com.adr.nbascore.rxjavatest.Task
 import com.google.gson.Gson
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash, need to copy the code to another fragment
@@ -44,6 +41,7 @@ class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash
     lateinit var swipeToRefresh: SwipeRefreshLayout
     lateinit var progressBar: ProgressBar
     private lateinit var disposable: CompositeDisposable
+    private var fragmentContext: Context? = null
     private var TAG = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -57,6 +55,8 @@ class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash
         progressBar = view.findViewById(R.id.progress_bar)
 
         disposable = CompositeDisposable()
+
+        fragmentContext = activity?.applicationContext
 
         swipeToRefresh = view.findViewById(R.id.swipe_to_refresh_home)
 
@@ -77,10 +77,10 @@ class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash
 
     private fun getMatchData(){
         swipeToRefresh.isRefreshing = true
-        val apiServicesMatch = APIClient.client?.create(APICurrentMatchInterface::class.java)
-        val callMatch = apiServicesMatch?.getDataCurrentMatch()
+        val apiServicesMatch = APIClient().client().create(APICurrentMatchInterface::class.java)
+        val callMatch = apiServicesMatch.getDataCurrentMatch()
 
-        callMatch?.subscribeOn(Schedulers.io())
+        callMatch.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe(getMatchDataObserver())
     }
@@ -114,10 +114,10 @@ class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash
 
     private fun getLogoData(){
         swipeToRefresh.isRefreshing = true
-        val apiServicesLogo = APIClient.client?.create(APITeamInterface::class.java)
-        val callLogo = apiServicesLogo?.getDataAllTeam()
+        val apiServicesLogo = APIClient().client().create(APITeamInterface::class.java)
+        val callLogo = apiServicesLogo.getDataAllTeam()
 
-        callLogo?.subscribeOn(Schedulers.io())
+        callLogo.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe(getLogoDataObserver())
     }
@@ -134,8 +134,10 @@ class HomeFragment : Fragment() {//TODO this fragment relatively safe from crash
             override fun onError(e: Throwable) {
                 Log.e(TAG, "onError : $e")
                 swipeToRefresh.isRefreshing = false
-                progressBar.visibility = View.GONE
-                Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
+                if (fragmentContext != null){
+                    progressBar.visibility = View.GONE
+                    Toast.makeText(fragmentContext, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
+                }
             }
 
             override fun onNext(t: TeamL) {
