@@ -26,6 +26,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_list_team.*
 
 class ListTeamFragment : Fragment() {
+    //TODO add team detail fragment from list all team and display some api response
 
     lateinit var rVAdapterListTeam: RVAdapterListTeam
     lateinit var recycleView:RecyclerView
@@ -68,7 +69,7 @@ class ListTeamFragment : Fragment() {
     private fun getDataObserver(): Observer<TeamL>{
         return object : Observer<TeamL> {
             override fun onComplete() {
-                Log.i("Testiiing", "Get API success")
+                Log.d(this.javaClass.simpleName, "Get API success")
             }
 
             override fun onSubscribe(d: Disposable) {
@@ -84,7 +85,7 @@ class ListTeamFragment : Fragment() {
             }
 
             override fun onError(e: Throwable) {
-                Log.e("Testiiing", "onError : $e")
+                Log.e(this.javaClass.simpleName, "onError : $e")
                 swipeToRefresh.isRefreshing = false
                 progress_bar_list_team.visibility = View.GONE
                 Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
