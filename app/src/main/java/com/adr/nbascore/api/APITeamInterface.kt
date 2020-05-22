@@ -8,7 +8,6 @@ import retrofit2.http.Query
 
 interface APITeamInterface {
     @GET("search_all_teams.php?l=NBA")
-//    fun getDataAllTeam(): Call<TeamL>
     fun getDataAllTeam(): Observable<TeamL>
 
     @GET("searchteams.php")
