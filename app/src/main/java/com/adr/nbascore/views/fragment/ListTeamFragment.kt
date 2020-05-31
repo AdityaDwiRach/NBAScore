@@ -1,4 +1,4 @@
-package com.adr.nbascore.fragment
+package com.adr.nbascore.views.fragment
 
 import android.graphics.Color
 import android.os.Bundle
@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.adr.nbascore.R
 import com.adr.nbascore.adapter.RVAdapterListTeam
-import com.adr.nbascore.api.APIClient
-import com.adr.nbascore.api.APITeamInterface
+import com.adr.nbascore.model.api.APIClient
+import com.adr.nbascore.model.api.APITeamInterface
 import com.adr.nbascore.model.list_team.Team
 import com.adr.nbascore.model.list_team.TeamL
 import io.reactivex.Observer

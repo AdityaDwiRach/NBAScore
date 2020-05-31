@@ -1,4 +1,4 @@
-package com.adr.nbascore.api
+package com.adr.nbascore.model.api
 
 import com.adr.nbascore.BuildConfig.BASE_URL
 import com.google.gson.GsonBuilder

@@ -1,4 +1,4 @@
-package com.adr.nbascore.api
+package com.adr.nbascore.model.api
 
 import com.adr.nbascore.model.current_match.CurrentMatchL
 import io.reactivex.Observable

@@ -1,16 +1,11 @@
-package com.adr.nbascore.fragment
+package com.adr.nbascore.views.fragment
 
-import android.content.Context
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.adr.nbascore.R
-import com.adr.nbascore.adapter.RVAdapterListTeam
-import java.lang.StringBuilder
 
 class FavoriteTeamFragment : Fragment() {
     //TODO implement like search fragment, calling api using the team name

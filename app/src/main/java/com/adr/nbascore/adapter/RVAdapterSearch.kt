@@ -1,16 +1,12 @@
 package com.adr.nbascore.adapter
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.Color.GREEN
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.adr.nbascore.R
-import com.adr.nbascore.fragment.SearchTeamFragment
 import com.adr.nbascore.model.last_game.LastGame
 import kotlinx.android.synthetic.main.list_last_5_games.view.*
 

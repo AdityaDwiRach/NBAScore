@@ -1,23 +1,22 @@
 package com.adr.nbascore.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.adr.nbascore.R
 import com.adr.nbascore.model.current_match.CurrentMatch
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_current_match.view.*
-import java.lang.reflect.Type
 
+class RVAdapterCurrentMatch : RecyclerView.Adapter<RVAdapterCurrentMatch.ViewHolder>(), ICurrentMatchAdapterModel, ICurrentMatchAdapterView {
 
-class RVAdapterCurrentMatch(
-    private var context: Context?, private var dataList: List<CurrentMatch>): RecyclerView.Adapter<RVAdapterCurrentMatch.ViewHolder>() {
+    private var dataList: List<CurrentMatch> = ArrayList<CurrentMatch>()
+    private var dataListName: List<String>? = null
+    private var dataListLogo: List<String>? = null
+    private var context: Context? = null
+
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val matchDate = itemView.match_date!!
@@ -34,43 +33,75 @@ class RVAdapterCurrentMatch(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        context = parent.context
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.list_current_match, parent, false))
     }
 
-    override fun getItemCount(): Int = dataList.size
+    override fun getItemCount(): Int = getSizeData()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val dataListBind = getListData()
 
-        holder.matchDate.text = dataList[position].dateEventLocal
-        holder.matchTime.text = dataList[position].strTimeLocal
+        holder.matchDate.text = dataListBind[position].dateEventLocal
+        holder.matchTime.text = dataListBind[position].strTimeLocal
 
-        holder.homeTeamScore.text = dataList[position].intHomeScore
-        holder.homeTeamName.text = dataList[position].strHomeTeam
+        holder.homeTeamScore.text = dataListBind[position].intHomeScore
+        holder.homeTeamName.text = dataListBind[position].strHomeTeam
 
-        holder.awayTeamScore.text = dataList[position].intAwayScore
-        holder.awayTeamName.text = dataList[position].strAwayTeam
-
-        holder.itemView.setOnClickListener {
-            Toast.makeText(context, "homescore : ${dataList[position].intHomeScore}, awayscore : ${dataList[position].intAwayScore}", Toast.LENGTH_SHORT).show()
-        }
-
-        val prefs = context?.getSharedPreferences("NAME_LOGO", Context.MODE_PRIVATE)
-        val gson = Gson()
-        val jsonName = prefs?.getString("DATA_LIST_NAME", null)
-        val jsonLogo = prefs?.getString("DATA_LIST_LOGO", null)
-        val type: Type = object : TypeToken<ArrayList<String?>?>() {}.type
-
-        val dataListName = gson.fromJson<ArrayList<String>>(jsonName,type)
-        val dataListLogo = gson.fromJson<ArrayList<String>>(jsonLogo, type)
-
-        val idHome = dataListName?.indexOf(dataList[position].strHomeTeam)
-        val idAway = dataListName?.indexOf(dataList[position].strAwayTeam)
+        holder.awayTeamScore.text = dataListBind[position].intAwayScore
+        holder.awayTeamName.text = dataListBind[position].strAwayTeam
 
         val imageHomeTeamLogo = holder.homeTeamLogo
         val imageAwayTeamLogo = holder.awayTeamLogo
 
-        Picasso.get().load(dataListLogo?.get(idHome!!)).fit().into(imageHomeTeamLogo)
+        val dataListNameBind = getListTeamName()
+        val dataListLogoBind = getListTeamLogo()
+        if (dataListNameBind != null && dataListLogoBind != null) {
+            val idHome = dataListNameBind.indexOf(dataListBind[position].strHomeTeam)
+            val idAway = dataListNameBind.indexOf(dataListBind[position].strAwayTeam)
 
-        Picasso.get().load(dataListLogo?.get(idAway!!)).fit().into(imageAwayTeamLogo)
+            Picasso.get().load(dataListLogoBind[idHome]).fit().into(imageHomeTeamLogo)
+            Picasso.get().load(dataListLogoBind[idAway]).fit().into(imageAwayTeamLogo)
+        }
+    }
+
+    override fun setListData(listData: List<CurrentMatch>) {
+        this.dataList = listData
+    }
+
+    override fun setListTeamName(listData: List<String>) {
+        this.dataListName = listData
+    }
+
+    override fun setListTeamLogo(listData: List<String>) {
+        this.dataListLogo = listData
+    }
+
+    override fun refreshData() {
+        notifyDataSetChanged()
+    }
+
+    override fun getSizeData(): Int {
+        return dataList.size
+    }
+
+    override fun getListData(): List<CurrentMatch> {
+        return dataList
+    }
+
+    override fun getListTeamLogo(): List<String>? {
+        return if (dataListLogo != null){
+            dataListLogo!!
+        } else {
+            null
+        }
+    }
+
+    override fun getListTeamName(): List<String>? {
+        return if (dataListName != null){
+            dataListName!!
+        } else {
+            null
+        }
     }
 }

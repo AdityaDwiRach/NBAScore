@@ -1,4 +1,4 @@
-package com.adr.nbascore.fragment
+package com.adr.nbascore.views.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -15,11 +15,11 @@ import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.adr.nbascore.api.APIClient
+import com.adr.nbascore.model.api.APIClient
 import com.adr.nbascore.R
 import com.adr.nbascore.adapter.RVAdapterSearch
-import com.adr.nbascore.api.APILastGameInterface
-import com.adr.nbascore.api.APITeamInterface
+import com.adr.nbascore.model.api.APILastGameInterface
+import com.adr.nbascore.model.api.APITeamInterface
 import com.adr.nbascore.model.last_game.LastGameL
 import com.adr.nbascore.model.list_team.TeamL
 import com.squareup.picasso.Picasso
