@@ -11,5 +11,5 @@ interface APITeamInterface {
     fun getDataAllTeam(): Observable<TeamL>
 
     @GET("searchteams.php")
-    fun getDataTeam(@Query("t") t:String?): Call<TeamL>
+    fun getDataTeam(@Query("t") t:String?): Observable<TeamL>
 }

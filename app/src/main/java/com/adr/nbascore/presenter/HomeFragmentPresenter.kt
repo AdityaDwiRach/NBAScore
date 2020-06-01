@@ -47,6 +47,7 @@ class HomeFragmentPresenter(val homeFragmentView: IHomeFragmentView, val context
 
                 override fun onError(e: Throwable) {
                     homeFragmentView.onError("Failed, please try again another minute")
+                    homeFragmentView.hideLoading()
                 }
 
             }))
@@ -94,6 +95,7 @@ class HomeFragmentPresenter(val homeFragmentView: IHomeFragmentView, val context
 
                 override fun onError(e: Throwable) {
                     homeFragmentView.onError("Failed, please try again another minute")
+                    homeFragmentView.hideLoading()
                 }
 
             })

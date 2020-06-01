@@ -23,6 +23,11 @@ import com.adr.nbascore.model.api.APITeamInterface
 import com.adr.nbascore.model.last_game.LastGameL
 import com.adr.nbascore.model.list_team.TeamL
 import com.squareup.picasso.Picasso
+import io.reactivex.Observable
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_search_team.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -77,50 +82,55 @@ class SearchTeamFragment: Fragment() {
         val apiServices = APIClient().client().create(APITeamInterface::class.java)
         val call = apiServices.getDataTeam(teamName)
 
-        call.enqueue(object : Callback<TeamL> {
-            override fun onFailure(call: Call<TeamL>, t: Throwable) {
-                progress_bar_search.visibility = View.GONE
-                Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
-            }
+        call.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe(object : Observer<TeamL> {
+                override fun onComplete() {
+                }
 
-            override fun onResponse(call: Call<TeamL>, response: Response<TeamL>) {
-                if (response.isSuccessful){
-                    val dataListTeam = response.body()?.teams
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onNext(t: TeamL) {
+                    val dataListTeam = t.teams
                     val teamBadgeSearch = view?.findViewById<ImageView>(R.id.team_badge_search)
                     val teamLogoSearch = view?.findViewById<ImageView>(R.id.team_logo_search)
-                    val teamNameResponse = dataListTeam?.get(0)?.strTeam
+                    val teamNameResponse = dataListTeam[0].strTeam
 
                     team_name_search.text = teamNameResponse
-                    team_desc_search.text = dataListTeam?.get(0)?.strDescriptionEN
+                    team_desc_search.text = dataListTeam[0].strDescriptionEN
 
-                    Picasso.get().load(dataListTeam?.get(0)?.strTeamBadge).fit().into(teamBadgeSearch)
-                    Picasso.get().load(dataListTeam?.get(0)?.strTeamLogo).fit().into(teamLogoSearch)
+                    Picasso.get().load(dataListTeam[0].strTeamBadge).fit().into(teamBadgeSearch)
+                    Picasso.get().load(dataListTeam[0].strTeamLogo).fit().into(teamLogoSearch)
 
-                    val teamId = dataListTeam?.get(0)?.idTeam
+                    val teamId = dataListTeam[0].idTeam
 
                     getLast5Game(teamId.toString(), teamNameResponse.toString())
                 }
 
-                progress_bar_search.visibility = View.GONE
-            }
+                override fun onError(e: Throwable) {
 
-        })
+                }
+
+            })
     }
 
     private fun getLast5Game(teamId: String, teamName: String){
         val apiServices = APIClient().client().create(APILastGameInterface::class.java)
         val call = apiServices.getDataLastGame(teamId)
 
-        call.enqueue(object : Callback<LastGameL> {
-            override fun onFailure(call: Call<LastGameL>, t: Throwable) {
-                progress_bar_search.visibility = View.GONE
-                Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
-            }
+        call.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe(object : Observer<LastGameL> {
 
-            override fun onResponse(call: Call<LastGameL>, response: Response<LastGameL>) {
+                override fun onComplete() {
+                }
 
-                if (response.isSuccessful){
-                    val dataListLastGame = response.body()?.results
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onNext(t: LastGameL) {
+                    val dataListLastGame = t?.results
 
                     if (dataListLastGame == null){
                         Log.i("Testiiing", "null bro")
@@ -131,11 +141,13 @@ class SearchTeamFragment: Fragment() {
 
                     rVAdapterSearch = RVAdapterSearch(activity?.applicationContext, dataListLastGame, teamName)
                     recycleViewSearch.adapter = rVAdapterSearch
+                    progress_bar_search.visibility = View.GONE}
+
+                override fun onError(e: Throwable) {
+                    progress_bar_search.visibility = View.GONE
+                    Toast.makeText(context, "Failed, please try again another minute", Toast.LENGTH_LONG).show()
                 }
 
-                progress_bar_search.visibility = View.GONE
-            }
-
-        })
+            })
     }
 }
