@@ -1,82 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_to_refresh_home"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_to_refresh_home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <TableLayout
+            android:id="@+id/tb_layout_home"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="5dp"
+            android:stretchColumns="0,1,2,3">
 
-            <TableLayout
-                android:id="@+id/tb_layout_home"
+            <TableRow
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="5dp"
-                android:stretchColumns="0,1,2,3">
+                android:layout_height="wrap_content">
 
-                <TableRow
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="0"
+                    android:layout_gravity="center"
+                    android:text="2019-12-1"
+                    android:visibility="invisible" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="0"
-                        android:layout_gravity="center"
-                        android:text="2019-12-1"
-                        android:visibility="invisible" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="HOME" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="1"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="HOME" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:gravity="center"
+                    android:text="VS"
+                    android:visibility="invisible" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="2"
-                        android:gravity="center"
-                        android:text="VS"
-                        android:visibility="invisible" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="3"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="AWAY" />
+            </TableRow>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="3"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="AWAY" />
-                </TableRow>
+        </TableLayout>
 
-            </TableLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycle_view_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tb_layout_home"
+            android:scrollbars="vertical" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycle_view_home"
-                android:layout_width="match_parent"
-                android:layout_below="@id/tb_layout_home"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical" />
-
-            <ProgressBar
-                android:id="@+id/progress_bar_home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="visible" />
-
-        </RelativeLayout>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

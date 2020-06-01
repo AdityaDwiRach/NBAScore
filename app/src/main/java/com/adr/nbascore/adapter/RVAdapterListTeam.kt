@@ -16,7 +16,10 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_team.view.*
 
 
-class RVAdapterListTeam(private var context: Context?, private var dataList: List<Team>): RecyclerView.Adapter<RVAdapterListTeam.ViewHolder>() {
+class RVAdapterListTeam: RecyclerView.Adapter<RVAdapterListTeam.ViewHolder>(), IListTeamAdapterModel, IListTeamAdapterView {
+
+    private var context: Context? = null
+    private var dataList: List<Team> = ArrayList()
 
     companion object {
         const val FAVORITE_TEAM = "favoriteteam"
@@ -31,21 +34,23 @@ class RVAdapterListTeam(private var context: Context?, private var dataList: Lis
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        context = parent.context
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.list_team, parent, false))
     }
 
-    override fun getItemCount(): Int = dataList.size
+    override fun getItemCount(): Int = getSizeData()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val dataListBind = getListData()
         val imageTeamLogo = holder.teamLogo
-        val favoriteKey = dataList[position].strTeamShort
+        val favoriteKey = dataListBind[position].strTeamShort
         val sharedPreferences = context?.getSharedPreferences(FAVORITE_TEAM, Context.MODE_PRIVATE)
 
-        Picasso.get().load(dataList[position].strTeamBadge).fit().into(imageTeamLogo)
+        Picasso.get().load(dataListBind[position].strTeamBadge).fit().into(imageTeamLogo)
 
-        holder.teamName.text = dataList[position].strTeam
-        holder.stadiumName.text = dataList[position].strStadium
-        holder.stadiumLocation.text = dataList[position].strStadiumLocation
+        holder.teamName.text = dataListBind[position].strTeam
+        holder.stadiumName.text = dataListBind[position].strStadium
+        holder.stadiumLocation.text = dataListBind[position].strStadiumLocation
 
         if (Utils().checkFavoritedTeam(context, favoriteKey)){
             holder.favorite.setImageResource(R.drawable.ic_favorite)
@@ -80,5 +85,21 @@ class RVAdapterListTeam(private var context: Context?, private var dataList: Lis
                 }
             }
         }
+    }
+
+    override fun setListData(listData: List<Team>) {
+        this.dataList = listData
+    }
+
+    override fun getSizeData(): Int {
+        return dataList.size
+    }
+
+    override fun getListData(): List<Team> {
+        return dataList
+    }
+
+    override fun refreshData() {
+        notifyDataSetChanged()
     }
 }

@@ -10,7 +10,6 @@ interface ICurrentMatchAdapterModel {
     fun getListData(): List<CurrentMatch>
     fun getListTeamName(): List<String>?
     fun getListTeamLogo(): List<String>?
-
 }
 
 interface ICurrentMatchAdapterView {

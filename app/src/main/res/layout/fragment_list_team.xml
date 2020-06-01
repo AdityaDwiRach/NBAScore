@@ -1,32 +1,19 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_to_refresh_list_team"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".views.MainActivity">
+    android:layout_height="match_parent">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_to_refresh_list_team"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycle_view_list_team"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
+    </FrameLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycle_view_list_team"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical"/>
-
-            <ProgressBar
-                android:id="@+id/progress_bar_list_team"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
-        </FrameLayout>
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>

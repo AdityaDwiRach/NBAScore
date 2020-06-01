@@ -7,5 +7,6 @@ interface ISearchFragmentView {
     fun onError(message: String)
     fun showLoading()
     fun hideLoading()
-    fun onSuccessSearchTeam(teamName: String, teamDescription: String, teamBadge: String, teamLogo: String, last5Games: List<LastGame>)
+    fun onSuccessSearchTeam(teamName: String, teamDescription: String, teamBadge: String, teamLogo: String)
+    fun onSuccessLastGame(last5Games: List<LastGame>, teamName: String)
 }

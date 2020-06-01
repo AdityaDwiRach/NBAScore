@@ -10,8 +10,12 @@ import com.adr.nbascore.R
 import com.adr.nbascore.model.last_game.LastGame
 import kotlinx.android.synthetic.main.list_last_5_games.view.*
 
-class RVAdapterSearch(private var context: Context?, private var dataList: List<LastGame>?, val teamName: String): RecyclerView.Adapter<RVAdapterSearch.ViewHolder>() {
+class RVAdapterSearch(): RecyclerView.Adapter<RVAdapterSearch.ViewHolder>(), ISearchAdapterModel, ISearchAdapterView {
     //TODO straighten the margin data
+
+    private var context: Context? = null
+    private var dataList: List<LastGame> = ArrayList()
+    private var searchTeamName = ""
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val dateSearch: TextView = itemView.match_date_search
@@ -24,20 +28,23 @@ class RVAdapterSearch(private var context: Context?, private var dataList: List<
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        context = parent.context
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.list_last_5_games, parent, false))
     }
 
-    override fun getItemCount(): Int = dataList!!.size
+    override fun getItemCount(): Int = getSizeData()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val homeTeam = dataList?.get(position)?.strHomeTeam
-        val awayTeam = dataList?.get(position)?.strAwayTeam
-        val homeScore = dataList?.get(position)?.intHomeScore
-        val awayScore = dataList?.get(position)?.intAwayScore
+        val dataListBind = getListData()
 
-        holder.dateSearch.text = dataList?.get(position)?.dateEventLocal
-        holder.timeSearch.text = dataList?.get(position)?.strTimeLocal
+        val homeTeam = dataListBind?.get(position)?.strHomeTeam
+        val awayTeam = dataListBind?.get(position)?.strAwayTeam
+        val homeScore = dataListBind?.get(position)?.intHomeScore
+        val awayScore = dataListBind?.get(position)?.intAwayScore
+
+        holder.dateSearch.text = dataListBind?.get(position)?.dateEventLocal
+        holder.timeSearch.text = dataListBind?.get(position)?.strTimeLocal
 
         holder.homeScore.text = homeScore
         holder.homeTeam.text = homeTeam
@@ -60,11 +67,35 @@ class RVAdapterSearch(private var context: Context?, private var dataList: List<
     }
 
     private fun isTeamWin(homeTeam: String, awayTeam: String, homeScore: Int, awayScore: Int): Boolean{
-        if (teamName == homeTeam){
+        if (getSearchTeam() == homeTeam){
             return homeScore > awayScore
-        } else if (teamName == awayTeam){
+        } else if (getSearchTeam() == awayTeam){
             return awayScore > homeScore
         }
         return false
+    }
+
+    override fun setListData(listData: List<LastGame>) {
+        this.dataList = listData
+    }
+
+    override fun setSearchTeam(teamName: String) {
+        this.searchTeamName = teamName
+    }
+
+    override fun getSizeData(): Int {
+        return dataList.size
+    }
+
+    override fun getListData(): List<LastGame> {
+        return dataList
+    }
+
+    override fun getSearchTeam(): String {
+        return searchTeamName
+    }
+
+    override fun refreshData() {
+        notifyDataSetChanged()
     }
 }
